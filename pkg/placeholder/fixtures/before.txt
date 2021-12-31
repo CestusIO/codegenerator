@@ -1,0 +1,31 @@
+// This is a sample file.
+
+// region CODE_REGION(Foo)
+This should be saved.
+
+// There is a comment in there.
+
+It's okay.
+	// endregion
+
+This should not.
+
+    // region CODE_REGION(Bar)
+This should be saved too !
+// endregion
+
+This should be lost.
+
+#region CODE_REGION(Zoo)
+This is saved as well.
+#endregion
+
+#region CODE_REGION(-Section.With/Special Char)
+This is saved too since we allow special chars now.
+#endregion
+
+This is lost.
+
+#pragma region CODE_REGION(C++)
+int i = 0;
+#pragma endregion
