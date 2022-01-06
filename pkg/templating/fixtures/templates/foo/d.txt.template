@@ -1,0 +1,7 @@
+I'm a template.
+
+// region CODE_REGION(Foo)
+New generated text.
+// endregion
+
+With code sections.

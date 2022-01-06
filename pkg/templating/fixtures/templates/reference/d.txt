@@ -1,0 +1,7 @@
+Updated text.
+
+// region CODE_REGION(Foo)
+New generated text.
+// endregion
+
+There too.

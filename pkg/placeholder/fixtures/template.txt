@@ -1,0 +1,22 @@
+// This is the new version !
+
+// region CODE_REGION(Bar)
+// endregion
+
+New content !
+
+// region CODE_REGION(Foo)
+// endregion
+
+So great, I didn't lose my changes !
+
+  #region CODE_REGION(Zoo)
+  #endregion
+
+#region CODE_REGION(-Section.With/Special Char)
+#endregion
+
+Oh yeah.
+
+#pragma region CODE_REGION(C++)
+#pragma endregion

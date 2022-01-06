@@ -1,0 +1,3 @@
+!!filename h-{{ . }}.txt
+!!pathreplace pathreplace replacedpath
+With path to replace
