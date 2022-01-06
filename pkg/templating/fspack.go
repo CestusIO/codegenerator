@@ -32,7 +32,7 @@ func (p fspack) LoadTemplates() (templates []Template, err error) {
 		templates = append(templates, template)
 		return nil
 	})
-	return templates, nil
+	return
 }
 
 type fsPackProvider struct {

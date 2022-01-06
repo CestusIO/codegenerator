@@ -44,11 +44,6 @@ func (m *indexOfInitialisms) isInitialism(key string) bool {
 	return ok
 }
 
-func (m *indexOfInitialisms) add(key string) *indexOfInitialisms {
-	m.index.Store(key, true)
-	return m
-}
-
 func (m *indexOfInitialisms) sorted() (result []string) {
 	m.sortMutex.Lock()
 	defer m.sortMutex.Unlock()
@@ -146,14 +141,6 @@ func init() {
 	// a test function
 	isInitialism = commonInitialisms.isInitialism
 }
-
-const (
-	// collectionFormatComma = "csv"
-	collectionFormatSpace = "ssv"
-	collectionFormatTab   = "tsv"
-	collectionFormatPipe  = "pipes"
-	collectionFormatMulti = "multi"
-)
 
 var nameReplaceTable = map[rune]string{
 	'@': "At ",
