@@ -109,8 +109,6 @@ func Render(templates []Template, root string, ctx interface{}, patterns ...stri
 		cmds = append(cmds, generatorCmds...)
 		p, _ := filepath.Rel(root, path)
 		if strings.HasSuffix(p, ".go") {
-			// goimports will return non-zero since mid-may 2020... Adding the
-			// "@" at the beginning instructs the executor to ignore failures.
 			cmds = append(cmds, []string{"goimports", "-l", "-w", "./" + p})
 			if !tmpl.GetHeader().NoGoGenerate {
 				cmds = append(cmds, []string{"go", "generate", "./" + p})

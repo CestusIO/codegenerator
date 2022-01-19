@@ -466,10 +466,14 @@ func trim(str string) string {
 	return strings.Trim(str, " ")
 }
 
+var ToUpper = upper
+
 // Shortcut to strings.ToUpper()
 func upper(str string) string {
 	return strings.ToUpper(trim(str))
 }
+
+var ToLower = lower
 
 // Shortcut to strings.ToLower()
 func lower(str string) string {
@@ -683,4 +687,6 @@ var templatesFuncMap = template.FuncMap{
 	"Rel":                     filepath.Rel,
 	"IsLast":                  IsLast,
 	"Capitalize":              Capitalize,
+	"ToUpper":                 ToUpper,
+	"ToLower":                 ToLower,
 }
