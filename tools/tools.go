@@ -6,7 +6,7 @@ package tools
 // region CODE_REGION(TOOL_DEPENDENCY)
 
 import (
-	_ "github.com/onsi/ginkgo/ginkgo"
+	_ "github.com/onsi/ginkgo/v2/ginkgo"
 )
 
 // endregion

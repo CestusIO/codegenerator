@@ -1,9 +1,13 @@
+#region CODE_REGION(Make)
 # Make is verbose in Linux. Make it silent.
 MAKEFLAGS += --silent
 include build.mk 
 # -----------------------------------------------------------------------------
 # DEFINES
 # -----------------------------------------------------------------------------
+TOOLS_MOD_DIR := ./tools
+# All directories with go.mod files  Used for building, testing and linting.
+ALL_GO_MOD_DIRS := $(filter-out $(TOOLS_MOD_DIR), $(shell find . -type f -name 'go.mod' -exec dirname {} \; | sort)) 
 
 SHELL                   := sh
 SCRIPT_DIR              := hack
@@ -40,14 +44,15 @@ ifneq ($(HAS_GO),)
 	endif
 endif
 
-LDFLAGS += -X code.cestus.io/tools/fabricator/pkg/genericclioptions.version=${svermakerBuildVersion}
-LDFLAGS += -X code.cestus.io/tools/fabricator/pkg/genericclioptions.buildDate=$(VERSION_DATE)
+LDFLAGS += $(ADDITIONALLDFLAGS)
+LDFLAGS += -X code.cestus.io/libs/pkg/buildinfo.version=${svermakerBuildVersion}
+LDFLAGS += -X code.cestus.io/libs/pkg/buildinfo.buildDate=$(VERSION_DATE)
 export LDFLAGS
 
 # building platform string
 b_platform = --> Building $(APP)-$(GOOS)-$(GOARCH)\n
 # building platform command
-b_command = export GOOS=$(GOOS); export GOARCH=$(GOARCH); go build -ldflags "$(LDFLAGS) -X code.cestus.io/tools/fabricator/pkg/genericclioptions.name=$(APP)" -o $(BINDIR)/$(APP)-$(GOOS)-$(GOARCH)$(BINARY_$(GOOS)_ENDING) ./cmd/$(APP)/ ;
+b_command = export GOOS=$(GOOS); export GOARCH=$(GOARCH); go build -ldflags "$(LDFLAGS) -X code.cestus.io/libs/pkg/buildinfo.name=$(APP)" -o $(BINDIR)/$(APP)-$(GOOS)-$(GOARCH)$(BINARY_$(GOOS)_ENDING) ./cmd/$(APP)/ ;
 # for each iterations use build message
 fb_platforms =$(foreach GOOS, $(PLATFORMS),$(foreach GOARCH, $(ARCHITECTURES),$(foreach APP, $(APPLICATIONS),$(b_platform))))
 # foreach iterations to do multi platform build
@@ -65,7 +70,11 @@ clean:
 .PHONY: generate
 ## Generate files
 generate:
-	go generate ./...
+	set -e; for dir in $(ALL_GO_MOD_DIRS); do \
+		echo "go generate $${dir}/..."; \
+		(cd "$${dir}" && \
+			go generate ./...); \
+	done
 
 .PHONY: compile
 ## Compile for current platform and architecture
@@ -94,18 +103,30 @@ build_all: install_tools build_all_ci
 
 .PHONY: build_all_ci
 ## Builds for all platforms and architectures (including generation and setup)
-build_all_ci: setup generate compile_all compile_absolute_everything
+build_all_ci: setup generate compile_all compile_absolute_everything changelog
 
 .PHONY: compile_absolute_everything
 ## Builds all files even those not part of the desired outputs
 compile_absolute_everything:
 	$(call msg, --> Building all files even those not part of the desired apps)
-	go build ./...
+	set -e; for dir in $(ALL_GO_MOD_DIRS); do \
+		echo "go build $${dir}/..."; \
+		(cd "$${dir}" && \
+			go build ./...);\
+	done
 
 .PHONY: test
 ## Runs the tests
-test:
-	export CGO_ENABLED=1; ginkgo -race -cover -coverprofile=cover.coverprofile -outputdir=. ./...
+test: install_tools
+	for dir in $(ALL_GO_MOD_DIRS); do \
+	echo "ginkgo $${dir}/..."; \
+	(cd "$${dir}" && \
+		export CGO_ENABLED=1; ginkgo -race -cover -coverprofile=cover.coverprofile --output-dir=. ./...); \
+	done; 
+.PHONY: changelog
+changelog:
+	$(call msg, --> Generating changelog)
+	git-chglog --next-tag $(goModuleBuildVersion) 1> /dev/null && ([ $$? -eq 0 ] && git-chglog --next-tag $(goModuleBuildVersion) -o CHANGELOG.md) || echo "changelog failure!"
 
 # Plonk the following at the end of your Makefile
 .DEFAULT_GOAL := show-help
@@ -163,3 +184,4 @@ show-help:
 		} \
 		printf "\n"; \
 	}'
+# endregion

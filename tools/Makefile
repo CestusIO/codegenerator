@@ -2,6 +2,6 @@
 ## Install tools
 all:
 #region CODE_REGION(project)
-	go install github.com/onsi/ginkgo/ginkgo@v1.16.1
+	go install github.com/onsi/ginkgo/v2/ginkgo@v2.0.0
+	go install github.com/git-chglog/git-chglog/cmd/git-chglog@latest
 #endregion
-	

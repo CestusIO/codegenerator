@@ -17,8 +17,9 @@ VERSION_DATE            ?= $(shell date -u +'%Y-%m-%dT%H:%M:%SZ')
 # Default version
 svermakerBuildVersion   ?= 
 # GOPRIVATE will disable go cache
-export GOPRIVATE        := 
+export GOPRIVATE        := code.cestus.io
 # default docker version 
-svermakerHelmLabel 	    ?= latest
+svermakerHelmLabel 	    ?= unreleased
+goModuleBuildVersion    ?= unreleased
 # additional LDFGLAGS (e.g. -w -s)
 ADDITIONALLDFLAGS       ?= 

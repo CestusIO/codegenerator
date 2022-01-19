@@ -1,0 +1,9 @@
+apiVersion: fabricator.cestus.io/v1alpha1
+kind: Config
+components:
+  - name: "codegenerator"
+    generator: fabricator-generate-project-go
+    spec:
+      goModule: code.cestus.io/libs/codegenerator
+      repoURL: https://gitlab.com/cestus/fabricator/codegenerator
+      isLib: true
