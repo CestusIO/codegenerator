@@ -52,7 +52,7 @@ func Render(templates []Template, root string, ctx interface{}, patterns ...stri
 			}
 		}
 
-		if tmpl.GetHeader().If != nil {
+		if tmpl.GetHeader().IfOr != nil {
 			if ok, err := tmpl.GetHeader().IfOr(ctx); err != nil {
 				return nil, nil, fmt.Errorf("failed to evaluate header `ifor` condition in `%s`: %s", tmpl.GetPath(), err)
 			} else if !ok {

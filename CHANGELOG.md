@@ -5,6 +5,14 @@ This CHANGELOG is a format conforming to [keep-a-changelog](https://github.com/o
 It is generated with git-chglog -o CHANGELOG.md
 
 
+<a name="v0.0.5"></a>
+## [v0.0.5](https://gitlab.com/cestus/fabricator/codegenerator/compare/v0.0.4...v0.0.5)
+
+### Fix
+
+* !!ifor created a crash because of a invalid condition
+
+
 <a name="v0.0.4"></a>
 ## [v0.0.4](https://gitlab.com/cestus/fabricator/codegenerator/compare/v0.0.3...v0.0.4)
 
