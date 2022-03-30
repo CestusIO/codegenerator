@@ -23,6 +23,7 @@ type Header struct {
 	Delimiters        [2]string
 	IfNotExists       bool
 	If                func(ctx interface{}) (bool, error)
+	IfOr              func(ctx interface{}) (bool, error)
 	GeneratorCommands []string
 	RemoveIfEmpty     bool
 	NoGoGenerate      bool
@@ -65,7 +66,7 @@ func ParseHeaders(r io.Reader, header *Header) (body io.Reader, err error) {
 				parts := strings.SplitN(value, " ", 2)
 				copy(header.Delimiters[:], parts)
 			case "if":
-				condition := fmt.Sprintf("{{ if %s }}X{{ end }}", value)
+				condition := fmt.Sprintf("{{ if and %s }}X{{ end }}", value)
 
 				tmpl, err := template.New("").Parse(condition)
 
@@ -74,6 +75,21 @@ func ParseHeaders(r io.Reader, header *Header) (body io.Reader, err error) {
 				}
 
 				header.If = func(ctx interface{}) (bool, error) {
+					buf := &bytes.Buffer{}
+					err := tmpl.Execute(buf, ctx)
+
+					return buf.Len() > 0, err
+				}
+			case "ifor":
+				condition := fmt.Sprintf("{{ if or %s }}X{{ end }}", value)
+
+				tmpl, err := template.New("").Parse(condition)
+
+				if err != nil {
+					return nil, fmt.Errorf("failed to parse conditional `if` header: %s", err)
+				}
+
+				header.IfOr = func(ctx interface{}) (bool, error) {
 					buf := &bytes.Buffer{}
 					err := tmpl.Execute(buf, ctx)
 

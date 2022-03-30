@@ -100,3 +100,121 @@ func TestParseHeadersIf(t *testing.T) {
 		assert.Error(t, err)
 	})
 }
+
+func TestParseHeadersIfAnd(t *testing.T) {
+	content := bytes.NewBufferString(`!!if .Foo .Bar
+`)
+
+	var header Header
+	_, err := ParseHeaders(content, &header)
+
+	require.NoError(t, err)
+	require.NotNil(t, header.If)
+
+	t.Run("true", func(t *testing.T) {
+		ok, err := header.If(struct {
+			Foo bool
+			Bar bool
+		}{Foo: true,
+			Bar: true})
+		assert.True(t, ok)
+		assert.NoError(t, err)
+	})
+
+	t.Run("false", func(t *testing.T) {
+		ok, err := header.If(struct {
+			Foo bool
+			Bar bool
+		}{
+			Foo: true,
+			Bar: false,
+		})
+		assert.False(t, ok)
+		assert.NoError(t, err)
+	})
+	t.Run("false", func(t *testing.T) {
+		ok, err := header.If(struct {
+			Foo bool
+			Bar bool
+		}{
+			Foo: false,
+			Bar: true,
+		})
+		assert.False(t, ok)
+		assert.NoError(t, err)
+	})
+	t.Run("false", func(t *testing.T) {
+		ok, err := header.If(struct {
+			Foo bool
+			Bar bool
+		}{
+			Foo: false,
+			Bar: false,
+		})
+		assert.False(t, ok)
+		assert.NoError(t, err)
+	})
+	t.Run("error", func(t *testing.T) {
+		_, err := header.If(struct{}{})
+		assert.Error(t, err)
+	})
+}
+
+func TestParseHeadersIfOr(t *testing.T) {
+	content := bytes.NewBufferString(`!!ifor .Foo .Bar
+`)
+
+	var header Header
+	_, err := ParseHeaders(content, &header)
+
+	require.NoError(t, err)
+	require.NotNil(t, header.IfOr)
+
+	t.Run("true", func(t *testing.T) {
+		ok, err := header.IfOr(struct {
+			Foo bool
+			Bar bool
+		}{Foo: true,
+			Bar: true})
+		assert.True(t, ok)
+		assert.NoError(t, err)
+	})
+
+	t.Run("true", func(t *testing.T) {
+		ok, err := header.IfOr(struct {
+			Foo bool
+			Bar bool
+		}{
+			Foo: true,
+			Bar: false,
+		})
+		assert.True(t, ok)
+		assert.NoError(t, err)
+	})
+	t.Run("true", func(t *testing.T) {
+		ok, err := header.IfOr(struct {
+			Foo bool
+			Bar bool
+		}{
+			Foo: false,
+			Bar: true,
+		})
+		assert.True(t, ok)
+		assert.NoError(t, err)
+	})
+	t.Run("false", func(t *testing.T) {
+		ok, err := header.IfOr(struct {
+			Foo bool
+			Bar bool
+		}{
+			Foo: false,
+			Bar: false,
+		})
+		assert.False(t, ok)
+		assert.NoError(t, err)
+	})
+	t.Run("error", func(t *testing.T) {
+		_, err := header.IfOr(struct{}{})
+		assert.Error(t, err)
+	})
+}

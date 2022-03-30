@@ -52,6 +52,14 @@ func Render(templates []Template, root string, ctx interface{}, patterns ...stri
 			}
 		}
 
+		if tmpl.GetHeader().If != nil {
+			if ok, err := tmpl.GetHeader().IfOr(ctx); err != nil {
+				return nil, nil, fmt.Errorf("failed to evaluate header `ifor` condition in `%s`: %s", tmpl.GetPath(), err)
+			} else if !ok {
+				continue
+			}
+		}
+
 		path := filepath.Join(root, relPath)
 		dirPath := filepath.ToSlash(filepath.Dir(path))
 
@@ -115,7 +123,6 @@ func Render(templates []Template, root string, ctx interface{}, patterns ...stri
 			}
 		}
 	}
-	fmt.Println(cmds)
 	sort.Strings(generated)
 
 	return
