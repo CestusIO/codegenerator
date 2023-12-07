@@ -39,6 +39,12 @@ func TestNonEditableFileHeader(t *testing.T) {
 func TestToGoComment(t *testing.T) {
 	assert.Equal(t, ToGoComment("AAA\n\nBBB"), "// AAA\n//\n// BBB")
 }
+func TestToEnvVarName(t *testing.T) {
+	assert.Equal(t, ToEnvVarName("HelloKitty"), "HELLO_KITTY")
+	assert.Equal(t, ToEnvVarName("hello-kitty"), "HELLO_KITTY")
+	assert.Equal(t, ToEnvVarName("hello_kitty"), "HELLO_KITTY")
+	assert.Equal(t, ToEnvVarName("HELLO_KITTY"), "HELLO_KITTY")
+}
 
 func TestToYAMLComment(t *testing.T) {
 	assert.Equal(t, ToYAMLComment("AAA\n\nBBB"), "# AAA\n#\n# BBB")
