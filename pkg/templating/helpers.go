@@ -554,7 +554,7 @@ func ToFileName(name string) string {
 	return strings.Join(out, "_")
 }
 
-// ToCommandName lowercases and underscores a go type name
+// ToCommandName lowercases and dashes a go type name
 func ToCommandName(name string) string {
 	in := split(name)
 	out := make([]string, 0, len(in))
@@ -563,6 +563,21 @@ func ToCommandName(name string) string {
 		out = append(out, lower(w))
 	}
 	return strings.Join(out, "-")
+}
+
+// ToEnvVarName uppercases and underscores a name
+func ToEnvVarName(name string) string {
+	if name == ToUpper(name) {
+		return name
+	}
+	in := split(name)
+	out := make([]string, 0, len(in))
+
+	for _, w := range in {
+		out = append(out, upper(w))
+	}
+
+	return strings.Join(out, "_")
 }
 
 // ToHumanNameTitle represents a code name as a human series of words with the first letters titleized
@@ -689,4 +704,5 @@ var templatesFuncMap = template.FuncMap{
 	"Capitalize":              Capitalize,
 	"ToUpper":                 ToUpper,
 	"ToLower":                 ToLower,
+	"ToEnvVarName":            ToEnvVarName,
 }

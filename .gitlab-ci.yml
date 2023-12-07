@@ -1,4 +1,0 @@
-include:
-  - project: "cestus/ci/gitlab-ci"
-    file: /pipeline/golang/libv2.yml
-    ref: master

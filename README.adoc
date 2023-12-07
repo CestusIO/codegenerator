@@ -1,7 +1,5 @@
+= codegenerator
 
-= Templates
+for the fabricator eco system
 
-You can add templates into this Folder. 
-
-This file also serves as an embedded file to prevent a "nothing to embed" error in new generation plugins
 
